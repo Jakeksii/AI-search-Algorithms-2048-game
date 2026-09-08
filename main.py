@@ -9,7 +9,7 @@ Timings and other tweaks live in settings.py.
 import tkinter as tk
 import traceback
 
-import AI
+import ai
 import settings
 from game import DIRECTIONS, SIZE, Game, TileMove
 
@@ -237,7 +237,7 @@ class App:
         if not self.ai_on or self.animating or self.finished:
             return
         try:
-            direction = AI.choose_move(self.game)
+            direction = ai.choose_move(self.game)
         except Exception:
             traceback.print_exc()
             self.stop_ai("AI crashed, see console.")

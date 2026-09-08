@@ -1,42 +1,35 @@
-"""All tweakable settings in one place. Nothing here is required by the rules
-of 2048; change freely."""
+"""Project configuration and AI settings."""
 
-# ---- Winning -----------------------------------------------------------------
-
-# The game is won and stops when a tile of this value appears. Applies to
-# human play, the AI button, and the benchmark (where it counts as a win).
+# ---- Winning Condition ----
+# Tile needed to trigger a win (2048 standard or 4096)
 TARGET_TILE = 4096
 
-# ---- AI search (AI.py) -------------------------------------------------------
-
-# How many of our own moves to look ahead. Each level multiplies the work by
-# roughly (4 moves x empty cells x 2 tile values), so 3 is already slow in
-# pure Python when the board is empty. We look deeper when the board is
-# crowded, because that is when mistakes are fatal and the tree is small.
+# ---- AI Search Settings (ai.py) ----
+# We use depth 2 when the board is open to keep the search fast,
+# and depth 3 when crowded to plan carefully.
 DEPTH_OPEN_BOARD = 2
 DEPTH_CROWDED_BOARD = 3
-CROWDED_THRESHOLD = 4  # empty cells or fewer -> use the deeper search
+CROWDED_THRESHOLD = 4  # 4 or fewer empty cells = crowded board
 
-# Heuristic weights. Tuned by hand; only their relative sizes matter.
-WEIGHT_EMPTY = 2.7  # reward free cells (room to move and to merge)
-WEIGHT_MONOTONIC = 1.0  # reward rows/columns that decrease steadily toward a corner
-WEIGHT_SMOOTH = 0.1  # penalise neighbours with very different values
-WEIGHT_MAX_IN_CORNER = 1.0  # reward keeping the biggest tile in a corner
-GAME_OVER_PENALTY = 1_000_000  # a dead board is worse than any heuristic score
+# ---- Heuristic Weights ----
+# Weights tuned through benchmark testing
+WEIGHT_MATRIX_PATTERN = 1.0   # Reward keeping tiles aligned with our snake grid
+WEIGHT_EMPTY = 100.0          # Reward keeping free space on the board
+WEIGHT_MERGES = 50.0          # Reward adjacent tiles that can immediately merge
+WEIGHT_CORNER = 2.0           # Extra bonus if the highest tile stays in (0,0)
+GAME_OVER_PENALTY = 100000.0  # Big penalty to avoid fatal deadlocks
 
-# ---- Game window (main.py) ---------------------------------------------------
+# ---- GUI & Animation Settings (main.py) ----
+ANIM_FRAMES = 5
+ANIM_INTERVAL_MS = 15
+AI_DELAY_MS = 60  # Small delay so humans can watch the AI play
 
-ANIM_FRAMES = 6  # frames per tile slide
-ANIM_INTERVAL_MS = 15  # milliseconds per frame
-AI_DELAY_MS = 80  # pause between AI moves, after the animation
-
-# ---- Benchmark (benchmark.py and the Benchmark button) -----------------------
-
-GAMES = 2  # how many games to play
-FIRST_SEED = 0  # games use seeds FIRST_SEED, FIRST_SEED + 1, ...
-WORKERS = 2  # parallel games (one process each); None = number of CPU cores
-ANIMATE = False  # slide tiles and pause between moves (much slower)
-CLOSE_DELAY_MS = 1000  # how long a finished game window stays open
-WINDOW_SCALE = 0.5  # benchmark window size relative to the game window (0.5 = a quarter of the area)
-WINDOWS_PER_ROW = 6  # each worker owns one window slot in this grid
-WINDOW_STEP = (260, 340)  # pixel offset between neighbouring windows; shrink with WINDOW_SCALE
+# ---- Benchmark Settings (benchmark.py) ----
+GAMES = 4                  # Number of games for quick testing
+FIRST_SEED = 10            # Starting seed for reproducible testing
+WORKERS = None             # None uses all available CPU cores
+ANIMATE = False            # Set to True only if you want visual windows during benchmark
+CLOSE_DELAY_MS = 500
+WINDOW_SCALE = 0.5
+WINDOWS_PER_ROW = 4
+WINDOW_STEP = (260, 340)
