@@ -8,9 +8,9 @@ SPAWN_CHANCES = [(2, 0.9), (4, 0.1)]
 # Snake pattern matrix: guides tiles in a descending order towards the top-left corner
 WEIGHT_MATRIX = [
     [2048, 1024, 512, 256],
-    [16,   32,   64,  128],
-    [8,    4,    2,   1],
-    [0.1,  0.2,  0.5, 0.8]
+    [16, 32, 64, 128],
+    [8, 4, 2, 1],
+    [0.1, 0.2, 0.5, 0.8]
 ]
 
 def choose_move(game):
